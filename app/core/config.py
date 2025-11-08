@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     DESCRIPTION: str = "Task management API with FastAPI by WillyPhan"
     AUTHOR: str = "Willy Phan"
-    DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost/taskpilot_db"
+    DATABASE_URL: str = "sqlite+aiosqlite:///./taskpilot.db"
 
     class Config:
         env_file = ".env"
