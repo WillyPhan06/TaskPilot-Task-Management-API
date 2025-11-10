@@ -4,6 +4,7 @@ from sqlalchemy.future import select
 from app.db.session import get_db
 from app.models.task import Task
 from app.schemas.task import TaskCreate, TaskUpdate, TaskOut
+from app.dependencies.auth import get_current_user
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
@@ -18,7 +19,7 @@ async def create_task(task: TaskCreate, db: AsyncSession = Depends(get_db)):
 
 # ✅ READ ALL
 @router.get("/", response_model=list[TaskOut])
-async def get_tasks(db: AsyncSession = Depends(get_db)):
+async def get_tasks(db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
     result = await db.execute(select(Task))
     return result.scalars().all()
 

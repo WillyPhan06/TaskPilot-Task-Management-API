@@ -4,7 +4,7 @@ from app.routers import users
 from app.core.config import settings
 from contextlib import asynccontextmanager
 from app.db.session import engine
-from app.models import Base
+from app.models.base import Base
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

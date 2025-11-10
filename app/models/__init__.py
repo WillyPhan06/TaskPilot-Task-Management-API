@@ -1,1 +1,1 @@
-from tasks import Base, Task
+from app.models.task import Base, Task
