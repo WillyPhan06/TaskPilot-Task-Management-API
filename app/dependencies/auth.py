@@ -23,3 +23,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db=Depends(get_d
         raise HTTPException(status_code=401, detail="User not found")
 
     return user
+
+def require_role(required_role: str):
+    async def role_checker(user: User = Depends(get_current_user)):
+        if user.role != required_role:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have access to this resource"
+            )
+        return user
+    return role_checker

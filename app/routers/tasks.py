@@ -4,7 +4,7 @@ from sqlalchemy.future import select
 from app.db.session import get_db
 from app.models.task import Task
 from app.schemas.task import TaskCreate, TaskUpdate, TaskOut
-from app.dependencies.auth import get_current_user
+from app.dependencies.auth import get_current_user, require_role
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
@@ -32,7 +32,6 @@ async def get_task(task_id: int, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Task not found")
     return task
 
-# ✅ UPDATE
 @router.put("/{task_id}", response_model=TaskOut)
 async def update_task(task_id: int, task_update: TaskUpdate, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Task).where(Task.id == task_id))
@@ -40,16 +39,18 @@ async def update_task(task_id: int, task_update: TaskUpdate, db: AsyncSession = 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
-    for key, value in task_update.dict(exclude_unset=True).items():
+    for key, value in task_update.model_dump(exclude_unset=True).items():
         setattr(task, key, value)
 
     await db.commit()
     await db.refresh(task)
     return task
 
-# ✅ DELETE
+
+
+# Admin-only endpoint
 @router.delete("/{task_id}")
-async def delete_task(task_id: int, db: AsyncSession = Depends(get_db)):
+async def delete_task(task_id: int, db: AsyncSession = Depends(get_db), user=Depends(require_role("admin"))):
     result = await db.execute(select(Task).where(Task.id == task_id))
     task = result.scalar_one_or_none()
     if not task:
@@ -58,3 +59,4 @@ async def delete_task(task_id: int, db: AsyncSession = Depends(get_db)):
     await db.delete(task)
     await db.commit()
     return {"message": f"Task {task_id} deleted"}
+
