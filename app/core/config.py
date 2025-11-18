@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     AUTHOR: str = "Willy Phan"
 
     DATABASE_URL: str = Field(default="sqlite+aiosqlite:///./taskpilot.db")
-    SECRET_KEY: str = Field(default="change_me")
+    SECRET_KEY: str
     ALGORITHM: str = Field(default="HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30)
 
