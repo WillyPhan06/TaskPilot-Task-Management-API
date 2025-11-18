@@ -1,5 +1,8 @@
 from pydantic_settings import BaseSettings
 from pydantic import Field
+import os
+
+print(">>> SECRET_KEY env:", os.environ.get("SECRET_KEY"))
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "TaskPilot"
