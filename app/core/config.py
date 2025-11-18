@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = Field(default="HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30)
 
-    model_config = {"env_file": ".env"}
+    class Config:
+        env_file = ".env"   # for local dev
+        env_file_encoding = 'utf-8'
 
 settings = Settings()
