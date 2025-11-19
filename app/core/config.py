@@ -2,8 +2,6 @@ from pydantic_settings import BaseSettings
 from pydantic import Field
 import os
 
-print(">>> SECRET_KEY env:", os.environ.get("SECRET_KEY"))
-
 class Settings(BaseSettings):
     PROJECT_NAME: str = "TaskPilot"
     VERSION: str = "1.0.0"
@@ -17,6 +15,6 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"   # for local dev
-        env_file_encoding = 'utf-8'
+        env_file_encoding = 'utf-8' # for encoding
 
 settings = Settings()
